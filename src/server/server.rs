@@ -34,11 +34,12 @@ use super::snap::{Runner as SnapHandler, Task as SnapTask};
 use super::transport::ServerTransport;
 use super::{Config, Error, Result};
 use crate::read_pool::ReadPool;
+use message::message;
 
 const LOAD_STATISTICS_SLOTS: usize = 4;
 const LOAD_STATISTICS_INTERVAL: Duration = Duration::from_millis(100);
 pub const GRPC_THREAD_PREFIX: &str = "grpc-server";
-pub const READPOOL_NORMAL_THREAD_PREFIX: &str = "store-read-norm";
+pub const READPOOL_NORMAL_THREAD_PREFIX: &str = "store-read-nora";
 pub const STATS_THREAD_PREFIX: &str = "transport-stats";
 
 /// The TiKV server
@@ -199,6 +200,7 @@ impl<T: RaftStoreRouter, S: StoreAddrResolver + 'static> Server<T, S> {
 
     /// Build gRPC server and bind to address.
     pub fn build_and_bind(&mut self) -> Result<SocketAddr> {
+        message!("build_and_bind");
         let sb = self.builder_or_server.take().unwrap().left().unwrap();
         let server = sb.build()?;
         let (host, port) = server.bind_addrs().next().unwrap();
@@ -211,6 +213,7 @@ impl<T: RaftStoreRouter, S: StoreAddrResolver + 'static> Server<T, S> {
     /// Starts the TiKV server.
     /// Notice: Make sure call `build_and_bind` first.
     pub fn start(&mut self, cfg: Arc<Config>, security_mgr: Arc<SecurityManager>) -> Result<()> {
+        message!("start");
         let snap_runner = SnapHandler::new(
             Arc::clone(&self.env),
             self.snap_mgr.clone(),
@@ -264,6 +267,7 @@ impl<T: RaftStoreRouter, S: StoreAddrResolver + 'static> Server<T, S> {
 
     /// Stops the TiKV server.
     pub fn stop(&mut self) -> Result<()> {
+        message!("stop");
         self.snap_worker.stop();
         if let Some(Either::Right(mut server)) = self.builder_or_server.take() {
             server.shutdown();

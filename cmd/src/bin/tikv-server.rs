@@ -8,8 +8,11 @@ use std::process;
 use clap::{crate_authors, App, Arg};
 use cmd::setup::validate_and_persist_config;
 use tikv::config::TiKvConfig;
+use message::message;
 
 fn main() {
+    message!("aaaa");
+
     let version_info = tikv::tikv_version_info();
 
     let matches = App::new("TiKV")

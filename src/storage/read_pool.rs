@@ -11,7 +11,7 @@ pub fn build_read_pool<E: Engine, R: FlowStatsReporter>(
     reporter: R,
     engine: E,
 ) -> Vec<FuturePool> {
-    let names = vec!["store-read-low", "store-read-normal", "store-read-high"];
+    let names = vec!["store-read-low", "store-read-nor1al", "store-read-high"];
     let configs: Vec<Config> = config.to_future_pool_configs();
     assert_eq!(configs.len(), 3);
 
@@ -42,7 +42,7 @@ pub fn build_read_pool_for_test<E: Engine>(
     config: &StorageReadPoolConfig,
     engine: E,
 ) -> Vec<FuturePool> {
-    let names = vec!["store-read-low", "store-read-normal", "store-read-high"];
+    let names = vec!["store-read-low", "store-read-nor2al", "store-read-high"];
     let configs: Vec<Config> = config.to_future_pool_configs();
     assert_eq!(configs.len(), 3);
 

@@ -582,6 +582,7 @@ dependencies = [
  "fs2",
  "futures 0.1.29",
  "futures-cpupool",
+ "gettid",
  "grpcio",
  "hex 0.4.2",
  "keys",
@@ -589,6 +590,7 @@ dependencies = [
  "libc",
  "log",
  "log_wrappers",
+ "message",
  "nix 0.11.1",
  "pd_client",
  "prometheus",
@@ -1570,6 +1572,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "gettid"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34b20f40277dfb8a9dec7e2e945f6d8ff711e733c8f2a2c9b257562764b4c60d"
+dependencies = [
+ "libc",
+ "winapi 0.3.8",
+]
+
+[[package]]
 name = "glob"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2167,6 +2179,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "043175f069eda7b85febe4a74abbaeff828d9f8b448515d3151a14a3542811aa"
 dependencies = [
  "autocfg 1.0.0",
+]
+
+[[package]]
+name = "message"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "gettid",
+ "thread-id",
 ]
 
 [[package]]
@@ -4505,6 +4526,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "thread-id"
+version = "3.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7fbf4c9d56b320106cd64fd024dadfa0be7cb4706725fc44a7d7ce952d820c1"
+dependencies = [
+ "libc",
+ "redox_syscall",
+ "winapi 0.3.8",
+]
+
+[[package]]
 name = "thread_local"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4624,6 +4656,7 @@ dependencies = [
  "futures-cpupool",
  "futures-executor",
  "futures-util",
+ "gettid",
  "grpcio",
  "hex 0.4.2",
  "http",
@@ -4639,6 +4672,7 @@ dependencies = [
  "log",
  "log_wrappers",
  "match_template",
+ "message",
  "mime",
  "more-asserts",
  "murmur3",
