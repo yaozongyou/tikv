@@ -105,6 +105,8 @@ use crate::{memory::*, setup::*, signal_handler};
 /// Run a TiKV server. Returns when the server is shutdown by the user, in which
 /// case the server will be properly stopped.
 pub fn run_tikv(config: TiKvConfig) {
+    aaa!("run_tikv");
+
     // Sets the global logger ASAP.
     // It is okay to use the config w/o `validate()`,
     // because `initial_logger()` handles various conditions.
@@ -152,6 +154,7 @@ pub fn run_tikv(config: TiKvConfig) {
         }};
     }
 
+    aaa!("config.raft_engine.enable: {}", config.raft_engine.enable);
     if !config.raft_engine.enable {
         run_impl!(RocksEngine)
     } else {
@@ -353,6 +356,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn check_conflict_addr(&mut self) {
+        aaa!("check_conflict_addr");
         let cur_addr: SocketAddr = self
             .config
             .server
@@ -940,6 +944,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn register_services(&mut self) {
+        aaa!("register_services");
         let servers = self.servers.as_mut().unwrap();
         let engines = self.engines.as_ref().unwrap();
 

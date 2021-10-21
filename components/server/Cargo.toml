@@ -26,6 +26,7 @@ test-engines-panic = [
 nortcheck = ["engine_rocks/nortcheck"]
 
 [dependencies]
+aaa = { path = "../../components/aaa" }
 backup = { path = "../backup", default-features = false }
 cdc = { path = "../cdc", default-features = false }
 chrono = "0.4"

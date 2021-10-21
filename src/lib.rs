@@ -38,6 +38,8 @@ extern crate serde_derive;
 extern crate more_asserts;
 #[macro_use]
 extern crate tikv_util;
+#[macro_use]
+extern crate aaa;
 
 #[cfg(test)]
 extern crate test;
@@ -78,10 +80,12 @@ pub fn tikv_version_info(build_time: Option<&str>) -> String {
 /// Prints the tikv version information to the standard output.
 pub fn log_tikv_info(build_time: Option<&str>) {
     info!("Welcome to TiKV");
+    aaa!("Welcome to TiKV");
     for line in tikv_version_info(build_time)
         .lines()
         .filter(|s| !s.is_empty())
     {
         info!("{}", line);
+        aaa!("{}", line);
     }
 }

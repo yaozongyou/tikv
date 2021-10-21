@@ -3,6 +3,7 @@
 // #[PerformanceCriticalPath]: Tikv gRPC APIs implementation
 use std::sync::Arc;
 use tikv_util::time::{duration_to_ms, duration_to_sec, Instant};
+use backtrace::Backtrace;
 
 use super::batch::{BatcherBuilder, ReqBatcher};
 use crate::coprocessor::Endpoint;
@@ -121,6 +122,9 @@ impl<T: RaftStoreRouter<E::Local> + 'static, E: Engine, L: LockManager> Service<
         proxy: Proxy,
         reject_messages_on_memory_ratio: f64,
     ) -> Self {
+        aaa!("kv service new");
+        aaa!("{:?}", Backtrace::new());
+
         Service {
             store_id,
             gc_worker,
@@ -1522,6 +1526,7 @@ fn future_raw_put<E: Engine, L: LockManager>(
     storage: &Storage<E, L>,
     mut req: RawPutRequest,
 ) -> impl Future<Output = ServerResult<RawPutResponse>> {
+    aaa!("future_raw_put");
     let (cb, f) = paired_future_callback();
     let for_atomic = req.get_for_cas();
     let res = if for_atomic {
