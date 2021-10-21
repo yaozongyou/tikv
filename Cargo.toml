@@ -251,6 +251,8 @@ members = [
   "components/coprocessor_plugin_api",
   "components/test_coprocessor_plugin/example_plugin",
   "components/resource_metering",
+  "components/aaa",
+  "components/hello",
 ]
 default-members = ["cmd/tikv-server", "cmd/tikv-ctl"]
 

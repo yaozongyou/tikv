@@ -4,6 +4,15 @@
 version = 3
 
 [[package]]
+name = "aaa"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "gettid",
+ "thread-id 3.3.0",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1693,6 +1702,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "gettid"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34b20f40277dfb8a9dec7e2e945f6d8ff711e733c8f2a2c9b257562764b4c60d"
+dependencies = [
+ "libc 0.2.100",
+ "winapi 0.3.9",
+]
+
+[[package]]
 name = "gimli"
 version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1805,6 +1824,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20564e78d53d2bb135c343b3f47714a56af2061f1c928fdb541dc7b9fdd94205"
 dependencies = [
  "unicode-segmentation",
+]
+
+[[package]]
+name = "hello"
+version = "0.1.0"
+dependencies = [
+ "aaa",
 ]
 
 [[package]]
@@ -3816,7 +3842,7 @@ dependencies = [
  "serde_derive",
  "slog",
  "slog-global",
- "thread-id",
+ "thread-id 4.0.0",
  "tikv_util",
 ]
 
@@ -4976,6 +5002,17 @@ dependencies = [
 
 [[package]]
 name = "thread-id"
+version = "3.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7fbf4c9d56b320106cd64fd024dadfa0be7cb4706725fc44a7d7ce952d820c1"
+dependencies = [
+ "libc 0.2.100",
+ "redox_syscall 0.1.56",
+ "winapi 0.3.9",
+]
+
+[[package]]
+name = "thread-id"
 version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5fdfe0627923f7411a43ec9ec9c39c3a9b4151be313e0922042581fb6c9b717f"
@@ -5345,6 +5382,7 @@ dependencies = [
 name = "tikv-server"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "clap",
  "server",
  "tikv",
