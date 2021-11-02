@@ -81,6 +81,7 @@ tikv_util = { path = "../../components/tikv_util", default-features = false }
 collections = { path = "../../components/collections" }
 toml = "0.5"
 txn_types = { path = "../../components/txn_types", default-features = false }
+aaa = { path = "../../components/aaa" }
 
 [build-dependencies]
 time = "0.1"

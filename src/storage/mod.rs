@@ -1418,6 +1418,10 @@ impl<E: Engine, L: LockManager> Storage<E, L> {
         }
     }
 
+    //fn get_type_of<T>(_: &T) -> &'static str {
+    //    return std::any::type_name::<T>();
+    //}
+
     /// Write a raw key to the storage.
     pub fn raw_put(
         &self,
@@ -1433,6 +1437,7 @@ impl<E: Engine, L: LockManager> Storage<E, L> {
 
         Self::check_api_version(api_version, ctx.api_version, CMD, iter::once(&key[..]))?;
 
+        aaa!("raw_put");
         check_key_size!(Some(&key).into_iter(), self.max_key_size, callback);
         let mut m = Modify::Put(
             Self::rawkv_cf(api_version, &cf)?,
@@ -1448,6 +1453,8 @@ impl<E: Engine, L: LockManager> Storage<E, L> {
 
         let mut batch = WriteData::from_modifies(vec![m]);
         batch.set_allowed_on_disk_almost_full();
+
+        aaa!("self.engine type name: {}", aaa::get_type_name(&self.engine));
 
         self.engine.async_write(
             &ctx,

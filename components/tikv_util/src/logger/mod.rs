@@ -39,7 +39,7 @@ static LOG_LEVEL: AtomicUsize = AtomicUsize::new(usize::max_value());
 pub fn init_log<D>(
     drain: D,
     level: Level,
-    use_async: bool,
+    mut use_async: bool,
     init_stdlog: bool,
     mut disabled_targets: Vec<String>,
     slow_threshold: u64,
@@ -48,6 +48,7 @@ where
     D: Drain + Send + 'static,
     <D as Drain>::Err: std::fmt::Display,
 {
+    aaa!("init_log");
     // Set the initial log level used by the Drains
     LOG_LEVEL.store(level.as_usize(), Ordering::Relaxed);
 
@@ -74,6 +75,8 @@ where
             true
         }
     };
+
+    //use_async = false;
 
     let (logger, guard) = if use_async {
         let (async_log, guard) = Async::new(LogAndFuse(drain))

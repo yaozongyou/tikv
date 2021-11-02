@@ -50,6 +50,7 @@ where
     S: RaftStoreRouter<EK> + LocalReadRouter<EK> + 'static,
     EK: KvEngine,
 {
+    aaa!("create_raft_storage");
     let store = Storage::from_engine(
         engine,
         cfg,
@@ -177,6 +178,7 @@ where
     where
         T: Transport + 'static,
     {
+        aaa!("start the node");
         let store_id = self.id();
         {
             let mut meta = store_meta.lock().unwrap();
@@ -309,6 +311,7 @@ where
     }
 
     fn load_all_stores(&mut self, status: Option<ReplicationStatus>) {
+        aaa!("load_all_stores: initializing replication mode status {:?} store_id {:?}", status, self.store.id);
         info!("initializing replication mode"; "status" => ?status, "store_id" => self.store.id);
         let stores = match self.pd_client.get_all_stores(false) {
             Ok(stores) => stores,
@@ -443,6 +446,7 @@ where
     where
         T: Transport + 'static,
     {
+        aaa!("start raft store thread: store_id {}", store_id);
         info!("start raft store thread"; "store_id" => store_id);
 
         if self.has_started {

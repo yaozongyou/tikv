@@ -1,6 +1,10 @@
 pub use chrono::Local;
 pub use gettid::gettid;
 
+pub fn get_type_name<T: ?Sized>(_: &T) -> &'static str {
+    return std::any::type_name::<T>();
+}
+
 #[macro_export]
 macro_rules! aaa {
     ($($arg:tt)*) => {{
@@ -19,10 +23,15 @@ macro_rules! aaa {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fmt::Debug;
 
     #[test]
     fn it_works() {
         aaa!("{} {}", "aaaa", 123);
+        aaa!(
+            "&7u32 as &dyn Debug type name: {}",
+            get_type_name(&7u32 as &dyn Debug)
+        );
         assert_eq!(2 + 2, 4);
     }
 }

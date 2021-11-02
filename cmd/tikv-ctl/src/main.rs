@@ -4,6 +4,9 @@
 #[macro_use]
 extern crate log;
 
+#[macro_use]
+extern crate aaa;
+
 use clap::{crate_authors, AppSettings};
 use encryption_export::{
     create_backend, data_key_manager_from_config, encryption_method_from_db_encryption_method,
@@ -71,10 +74,12 @@ fn perror_and_exit<E: Error>(prefix: &str, e: E) -> ! {
 }
 
 fn init_ctl_logger(level: &str) {
+    aaa!("init_ctl_logger: level {}", level);
     let mut cfg = TiKvConfig::default();
     cfg.log_level = slog::Level::from_str(level).unwrap();
     cfg.rocksdb.info_log_dir = "./ctl-engine-info-log".to_owned();
     cfg.raftdb.info_log_dir = "./ctl-engine-info-log".to_owned();
+    aaa!("cfg: {:?}", cfg);
     initial_logger(&cfg);
 }
 
@@ -89,6 +94,7 @@ fn handle_engine_error(err: EngineError) -> ! {
             );
         }
     }
+    std::thread::sleep(std::time::Duration::from_secs(10));
     process::exit(-1);
 }
 
@@ -182,6 +188,7 @@ trait DebugExecutor {
     }
 
     fn dump_all_region_size(&self, cfs: Vec<&str>) {
+        aaa!("dump_all_region_size");
         let regions = self.get_all_regions_in_store();
         let regions_number = regions.len();
         let mut total_size = 0;
@@ -1805,10 +1812,17 @@ enum UnsafeRecoverCmd {
 }
 
 fn main() {
+    aaa!("tikv ctl main");
     let opt = Opt::from_args();
+
+    aaa!("111");
+
+    aaa!("log_level: {:?}", &opt.log_level);
 
     // Initialize logger.
     init_ctl_logger(&opt.log_level);
+
+    aaa!("222");
 
     // Initialize configuration and security manager.
     let cfg_path = opt.config.as_ref();
@@ -1824,6 +1838,8 @@ fn main() {
         },
     );
     let mgr = new_security_mgr(&opt);
+
+    aaa!("333");
 
     let cmd = match opt.cmd {
         Some(cmd) => cmd,
@@ -1841,11 +1857,15 @@ fn main() {
             } else if let Some(decoded) = opt.encode.as_deref() {
                 println!("{}", Key::from_raw(&unescape(decoded)));
             } else {
+                aaa!("444");
                 Opt::clap().print_help().ok();
+                aaa!("555");
             }
             return;
         }
     };
+
+    aaa!("444");
 
     // Bypass the ldb and sst dump command to RocksDB.
     if let Cmd::External(args) = cmd {
@@ -1857,11 +1877,15 @@ fn main() {
         return;
     }
 
+    aaa!("555");
+
     if let Cmd::BadSsts { db, manifest, pd } = cmd {
         let pd_client = get_pd_rpc_client(&pd, Arc::clone(&mgr));
         print_bad_ssts(&db, manifest.as_deref(), pd_client, &cfg);
         return;
     }
+
+    aaa!("666");
 
     // Deal with subcommand dump-snap-meta. This subcommand doesn't require other args, so process
     // it before checking args.
@@ -1869,6 +1893,8 @@ fn main() {
         let path = file.as_ref();
         return dump_snap_meta_file(path);
     }
+
+    aaa!("777");
 
     if let Cmd::DecryptFile { file, out_file } = cmd {
         let message = "This action will expose sensitive data as plaintext on persistent storage";
@@ -1920,6 +1946,8 @@ fn main() {
         return;
     }
 
+    aaa!("888");
+
     if let Cmd::EncryptionMeta { cmd: subcmd } = cmd {
         match subcmd {
             EncryptionMetaCmd::DumpKey { ids } => {
@@ -1944,6 +1972,8 @@ fn main() {
         }
         return;
     }
+
+    aaa!("999");
 
     // Deal with all subcommands needs PD.
     if let Some(pd) = opt.pd.as_deref() {
@@ -1979,6 +2009,8 @@ fn main() {
         return;
     }
 
+    aaa!("aaa");
+
     // Deal with all subcommands about db or host.
     let data_dir = opt.data_dir.as_deref();
     let skip_paranoid_checks = opt.skip_paranoid_checks;
@@ -1986,6 +2018,8 @@ fn main() {
 
     let debug_executor =
         new_debug_executor(&cfg, data_dir, skip_paranoid_checks, host, Arc::clone(&mgr));
+
+    aaa!("bbb");
 
     if let Cmd::Print { cf, key } = cmd {
         let key = unescape(&key);
@@ -2011,12 +2045,14 @@ fn main() {
             }
         }
     } else if let Cmd::Size { region, cf } = cmd {
+        aaa!("#111");
         let cfs = cf.iter().map(AsRef::as_ref).collect();
         if let Some(id) = region {
             debug_executor.dump_region_size(id, cfs);
         } else {
             debug_executor.dump_all_region_size(cfs);
         }
+        aaa!("#222");
     } else if let Cmd::Scan {
         from,
         to,
@@ -2229,8 +2265,12 @@ fn main() {
     } else if let Cmd::Cluster {} = cmd {
         debug_executor.dump_cluster_info();
     } else {
+        aaa!("222");
         Opt::clap().print_help().ok();
+        aaa!("333");
     }
+
+    std::thread::sleep(std::time::Duration::from_secs(10));
 }
 
 fn from_hex(key: &str) -> Result<Vec<u8>, hex::FromHexError> {

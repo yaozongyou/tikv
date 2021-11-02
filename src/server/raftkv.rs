@@ -384,6 +384,7 @@ where
         batch: WriteData,
         write_cb: Callback<()>,
     ) -> kv::Result<()> {
+        aaa!("async_write");
         self.async_write_ext(ctx, batch, write_cb, None, None)
     }
 

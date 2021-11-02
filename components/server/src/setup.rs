@@ -65,6 +65,7 @@ fn make_engine_log_path(path: &str, sub_path: &str, filename: &str) -> String {
 
 #[allow(dead_code)]
 pub fn initial_logger(config: &TiKvConfig) {
+    aaa!("initial_logger");
     let rocksdb_info_log_path = if !config.rocksdb.info_log_dir.is_empty() {
         make_engine_log_path(&config.rocksdb.info_log_dir, "", DEFAULT_ROCKSDB_LOG_FILE)
     } else {
@@ -135,6 +136,7 @@ pub fn initial_logger(config: &TiKvConfig) {
         S: slog::Drain<Ok = (), Err = io::Error> + Send + 'static,
         T: slog::Drain<Ok = (), Err = io::Error> + Send + 'static,
     {
+        aaa!("build_logger_with_slow_log");
         // Use async drainer and init std log.
         let drainer = logger::LogDispatcher::new(normal, rocksdb, raftdb, slow);
         let level = config.log_level;

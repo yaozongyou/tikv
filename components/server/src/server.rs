@@ -511,6 +511,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn init_engines(&mut self, engines: Engines<RocksEngine, ER>) {
+        aaa!("init_engines");
         let store_meta = Arc::new(Mutex::new(StoreMeta::new(PENDING_MSG_CAP)));
         let engine = RaftKv::new(
             ServerRaftStoreRouter::new(
@@ -561,6 +562,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn init_servers(&mut self) -> Arc<VersionTrack<ServerConfig>> {
+        aaa!("init_servers");
         let flow_controller = Arc::new(FlowController::new(
             &self.config.storage.flow_control,
             self.engines.as_ref().unwrap().engine.kv_engine(),

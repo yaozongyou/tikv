@@ -4284,6 +4284,7 @@ dependencies = [
 name = "server"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "backup",
  "cdc",
  "chrono",
@@ -5181,6 +5182,7 @@ dependencies = [
 name = "tikv"
 version = "5.3.0-alpha"
 dependencies = [
+ "aaa",
  "anyhow",
  "async-stream",
  "async-trait",
@@ -5297,6 +5299,7 @@ dependencies = [
 name = "tikv-ctl"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "backup",
  "cdc",
  "chrono",
@@ -5441,6 +5444,7 @@ dependencies = [
 name = "tikv_util"
 version = "0.1.0"
 dependencies = [
+ "aaa",
  "async-speed-limit",
  "backtrace",
  "byteorder",

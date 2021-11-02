@@ -3,7 +3,6 @@
 // #[PerformanceCriticalPath]: Tikv gRPC APIs implementation
 use std::sync::Arc;
 use tikv_util::time::{duration_to_ms, duration_to_sec, Instant};
-use backtrace::Backtrace;
 
 use super::batch::{BatcherBuilder, ReqBatcher};
 use crate::coprocessor::Endpoint;
@@ -123,7 +122,7 @@ impl<T: RaftStoreRouter<E::Local> + 'static, E: Engine, L: LockManager> Service<
         reject_messages_on_memory_ratio: f64,
     ) -> Self {
         aaa!("kv service new");
-        aaa!("{:?}", Backtrace::new());
+        //aaa!("{:?}", Backtrace::new());
 
         Service {
             store_id,
