@@ -39,7 +39,7 @@ static LOG_LEVEL: AtomicUsize = AtomicUsize::new(usize::max_value());
 pub fn init_log<D>(
     drain: D,
     level: Level,
-    mut use_async: bool,
+    use_async: bool,
     init_stdlog: bool,
     mut disabled_targets: Vec<String>,
     slow_threshold: u64,

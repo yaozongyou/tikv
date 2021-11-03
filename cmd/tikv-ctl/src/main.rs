@@ -94,8 +94,14 @@ fn handle_engine_error(err: EngineError) -> ! {
             );
         }
     }
-    std::thread::sleep(std::time::Duration::from_secs(10));
+    //std::thread::sleep(std::time::Duration::from_secs(10));
+
+    // sloggers create async loggers, so we drop it manually to flush.
+    slog_global::clear_global();
+    log::logger().flush();
+
     process::exit(-1);
+    //panic!("aaaaa");
 }
 
 fn new_debug_executor(
@@ -1860,6 +1866,8 @@ fn main() {
                 aaa!("444");
                 Opt::clap().print_help().ok();
                 aaa!("555");
+                info!("");
+                info!("hello world!");
             }
             return;
         }
