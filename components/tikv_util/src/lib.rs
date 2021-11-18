@@ -22,6 +22,9 @@ use nix::unistd::{fork, ForkResult};
 use rand::rngs::ThreadRng;
 
 #[macro_use]
+extern crate aaa;
+
+#[macro_use]
 pub mod log;
 pub mod buffer_vec;
 pub mod codec;

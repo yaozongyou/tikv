@@ -105,6 +105,7 @@ use crate::{memory::*, setup::*, signal_handler};
 /// Run a TiKV server. Returns when the server is shutdown by the user, in which
 /// case the server will be properly stopped.
 pub fn run_tikv(config: TiKvConfig) {
+    aaa!("run_tikv: config {:?}", config);
     // Sets the global logger ASAP.
     // It is okay to use the config w/o `validate()`,
     // because `initial_logger()` handles various conditions.
@@ -153,8 +154,10 @@ pub fn run_tikv(config: TiKvConfig) {
     }
 
     if !config.raft_engine.enable {
+        aaa!("rocks engine");
         run_impl!(RocksEngine)
     } else {
+        aaa!("raft log engine");
         run_impl!(RaftLogEngine)
     }
 }
@@ -213,6 +216,7 @@ type LocalRaftKv<EK, ER> = RaftKv<EK, ServerRaftStoreRouter<EK, ER>>;
 
 impl<ER: RaftEngine> TiKVServer<ER> {
     fn init(mut config: TiKvConfig) -> TiKVServer<ER> {
+        aaa!("TikVServer init: config {:?}", config);
         tikv_util::thread_group::set_properties(Some(GroupProperties::default()));
         // It is okay use pd config and security config before `init_config`,
         // because these configs must be provided by command line, and only
@@ -353,6 +357,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn check_conflict_addr(&mut self) {
+        aaa!("tikv server check_conflict_addr");
         let cur_addr: SocketAddr = self
             .config
             .server
@@ -390,6 +395,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn init_fs(&mut self) {
+        aaa!("tikv server init_fs: store_path {:?}", self.store_path);
         let lock_path = self.store_path.join(Path::new("LOCK"));
 
         let f = File::create(lock_path.as_path())
@@ -450,12 +456,14 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn init_yatp(&self) {
+        aaa!("tikv server init_yatp");
         yatp::metrics::set_namespace(Some("tikv"));
         prometheus::register(Box::new(yatp::metrics::MULTILEVEL_LEVEL0_CHANCE.clone())).unwrap();
         prometheus::register(Box::new(yatp::metrics::MULTILEVEL_LEVEL_ELAPSED.clone())).unwrap();
     }
 
     fn init_encryption(&mut self) {
+        aaa!("tikv server init_encryption");
         self.encryption_key_manager = data_key_manager_from_config(
             &self.config.security.encryption,
             &self.config.storage.data_dir,
@@ -500,6 +508,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn init_flow_receiver(&mut self) -> engine_rocks::FlowListener {
+        aaa!("tikv server init_flow_receiver");
         let (tx, rx) = mpsc::channel();
         self.flow_info_sender = Some(tx.clone());
         self.flow_info_receiver = Some(rx);
@@ -507,6 +516,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn init_engines(&mut self, engines: Engines<RocksEngine, ER>) {
+        aaa!("tikv server init_engines");
         let store_meta = Arc::new(Mutex::new(StoreMeta::new(PENDING_MSG_CAP)));
         let engine = RaftKv::new(
             ServerRaftStoreRouter::new(
@@ -557,6 +567,7 @@ impl<ER: RaftEngine> TiKVServer<ER> {
     }
 
     fn init_servers(&mut self) -> Arc<VersionTrack<ServerConfig>> {
+        aaa!("tikv server init_servers");
         let flow_controller = Arc::new(FlowController::new(
             &self.config.storage.flow_control,
             self.engines.as_ref().unwrap().engine.kv_engine(),
@@ -1242,6 +1253,7 @@ impl TiKVServer<RocksEngine> {
         &mut self,
         flow_listener: engine_rocks::FlowListener,
     ) -> (Engines<RocksEngine, RocksEngine>, Arc<EnginesResourceInfo>) {
+        aaa!("TiKVServer<RocksEngine>::init_raw_engines");
         let env = get_env(self.encryption_key_manager.clone(), get_io_rate_limiter()).unwrap();
         let block_cache = self.config.storage.block_cache.build_shared_cache();
 

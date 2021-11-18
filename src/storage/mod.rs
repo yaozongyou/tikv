@@ -225,6 +225,7 @@ impl<E: Engine, L: LockManager> Storage<E, L> {
         );
 
         info!("Storage started.");
+        aaa!("Storage started");
 
         Ok(Storage {
             engine,
@@ -1428,6 +1429,7 @@ impl<E: Engine, L: LockManager> Storage<E, L> {
         ttl: u64,
         callback: Callback<()>,
     ) -> Result<()> {
+        aaa!("Storage::raw_put: cf {} key {:?} value {:?}", cf, key, value);
         const CMD: CommandKind = CommandKind::raw_put;
         let api_version = self.api_version;
 
@@ -1439,6 +1441,7 @@ impl<E: Engine, L: LockManager> Storage<E, L> {
             Key::from_encoded(key),
             value,
         );
+        aaa!("m: {:?}", m);
         if self.enable_ttl {
             let expire_ts = convert_to_expire_ts(ttl);
             m.with_ttl(expire_ts);

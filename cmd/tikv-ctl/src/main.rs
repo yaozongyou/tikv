@@ -4,6 +4,9 @@
 #[macro_use]
 extern crate log;
 
+#[macro_use]
+extern crate aaa;
+
 use clap::{crate_authors, AppSettings};
 use encryption_export::{
     create_backend, data_key_manager_from_config, encryption_method_from_db_encryption_method,
@@ -99,6 +102,7 @@ fn new_debug_executor(
     host: Option<&str>,
     mgr: Arc<SecurityManager>,
 ) -> Box<dyn DebugExecutor> {
+    aaa!("new_debug_executor: data_dir {:?} skip_paranoid_checks {:?} host {:?}", data_dir, skip_paranoid_checks, host);
     if let Some(remote) = host {
         return Box::new(new_debug_client(remote, mgr)) as Box<dyn DebugExecutor>;
     }
@@ -106,13 +110,19 @@ fn new_debug_executor(
     let data_dir = data_dir.unwrap();
     let kv_path = canonicalize_sub_path(data_dir, DEFAULT_ROCKSDB_SUB_DIR).unwrap();
 
+    aaa!("cfg.security.encryption: {:?}", cfg.security.encryption);
+
     let key_manager = data_key_manager_from_config(&cfg.security.encryption, &cfg.storage.data_dir)
         .unwrap()
         .map(Arc::new);
 
+    aaa!("cfg.storage.block_cache: {:?}", cfg.storage.block_cache);
+
     let cache = cfg.storage.block_cache.build_shared_cache();
     let shared_block_cache = cache.is_some();
     let env = get_env(key_manager, None /*io_rate_limiter*/).unwrap();
+
+    aaa!("cfg.rocksdb: {:?}", cfg.rocksdb);
 
     let mut kv_db_opts = cfg.rocksdb.build_opt();
     kv_db_opts.set_env(env.clone());
@@ -122,6 +132,7 @@ fn new_debug_executor(
         .build_cf_opts(&cache, None, cfg.storage.enable_ttl);
     let kv_path = PathBuf::from(kv_path).canonicalize().unwrap();
     let kv_path = kv_path.to_str().unwrap();
+    aaa!("kv_path: {:?}", kv_path);
     let kv_db = match new_engine_opt(kv_path, kv_db_opts, kv_cfs_opts) {
         Ok(db) => db,
         Err(e) => handle_engine_error(e),
@@ -135,6 +146,7 @@ fn new_debug_executor(
         raft_db_opts.set_env(env);
         let raft_db_cf_opts = cfg.raftdb.build_cf_opts(&cache);
         let raft_path = canonicalize_sub_path(data_dir, &cfg.raft_store.raftdb_path).unwrap();
+        aaa!("raft_path: {:?}", raft_path);
         let raft_db = match new_engine_opt(&raft_path, raft_db_opts, raft_db_cf_opts) {
             Ok(db) => db,
             Err(e) => handle_engine_error(e),
@@ -171,6 +183,7 @@ trait DebugExecutor {
     }
 
     fn dump_region_size(&self, region: u64, cfs: Vec<&str>) -> usize {
+        aaa!("dump_region_size: cfs {:?}", cfs);
         let sizes = self.get_region_size(region, cfs);
         let mut total_size = 0;
         println!("region id: {}", region);
@@ -182,6 +195,7 @@ trait DebugExecutor {
     }
 
     fn dump_all_region_size(&self, cfs: Vec<&str>) {
+        aaa!("dump all region size: cfs {:?}", cfs);
         let regions = self.get_all_regions_in_store();
         let regions_number = regions.len();
         let mut total_size = 0;
@@ -1805,6 +1819,7 @@ enum UnsafeRecoverCmd {
 }
 
 fn main() {
+    aaa!("tikv-ctl main");
     let opt = Opt::from_args();
 
     // Initialize logger.
@@ -2011,6 +2026,7 @@ fn main() {
             }
         }
     } else if let Cmd::Size { region, cf } = cmd {
+        aaa!("size command");
         let cfs = cf.iter().map(AsRef::as_ref).collect();
         if let Some(id) = region {
             debug_executor.dump_region_size(id, cfs);

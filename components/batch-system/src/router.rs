@@ -108,9 +108,11 @@ where
     where
         F: FnMut(&BasicMailbox<N>) -> Option<R>,
     {
+        aaa!("batch-system Router::check_do: addr {}", addr);
         let caches = unsafe { &mut *self.caches.as_ptr() };
         let mut connected = true;
         if let Some(mailbox) = caches.get(&addr) {
+            //aaa!("mailbox: {:?}", mailbox);
             match f(mailbox) {
                 Some(r) => return CheckDoResult::Valid(r),
                 None => {
@@ -118,6 +120,8 @@ where
                 }
             }
         }
+
+        aaa!("check_do: 111");
 
         let (cnt, mailbox) = {
             let mut boxes = self.normals.lock().unwrap();
@@ -207,6 +211,7 @@ where
         addr: u64,
         msg: N::Message,
     ) -> Either<Result<(), TrySendError<N::Message>>, N::Message> {
+        aaa!("batch-system Router::try_send: addr {}", addr);
         let mut msg = Some(msg);
         let res = self.check_do(addr, |mailbox| {
             let m = msg.take().unwrap();
@@ -234,6 +239,7 @@ where
     /// Send the message to specified address.
     #[inline]
     pub fn send(&self, addr: u64, msg: N::Message) -> Result<(), TrySendError<N::Message>> {
+        aaa!("batch-system Router::send: addr {}", addr);
         match self.try_send(addr, msg) {
             Either::Left(res) => res,
             Either::Right(m) => Err(TrySendError::Disconnected(m)),

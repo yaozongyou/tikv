@@ -546,7 +546,9 @@ where
     }
 
     pub fn handle_msgs(&mut self, msgs: &mut Vec<PeerMsg<EK>>) {
+        aaa!("fsm peer handle_msgs");
         for m in msgs.drain(..) {
+            aaa!("fsm peer handle_msgs: m {:?}", m);
             match m {
                 PeerMsg::RaftMessage(msg) => {
                     if let Err(e) = self.on_raft_message(msg) {
@@ -1461,6 +1463,7 @@ where
     }
 
     fn on_raft_message(&mut self, msg: InspectedRaftMessage) -> Result<()> {
+        aaa!("PeerFsmDelegate on_raft_message");
         let InspectedRaftMessage { heap_size, mut msg } = msg;
         let peer_disk_usage = msg.disk_usage;
         let stepped = Cell::new(false);
@@ -1484,6 +1487,9 @@ where
             "from_peer_id" => msg.get_from_peer().get_id(),
             "to_peer_id" => msg.get_to_peer().get_id(),
         );
+        aaa!("handle raft message: region_id {} peer_id {} message_type {} from_peer_id {} to_peer_id {}", 
+            self.region_id(), self.fsm.peer_id(), util::MsgType(&msg), msg.get_from_peer().get_id(),
+            msg.get_to_peer().get_id());
 
         if self.fsm.peer.pending_remove || self.fsm.stopped {
             return Ok(());

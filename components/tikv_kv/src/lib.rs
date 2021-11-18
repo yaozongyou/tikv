@@ -15,6 +15,8 @@ extern crate fail;
 extern crate slog_derive;
 #[macro_use]
 extern crate tikv_util;
+#[macro_use]
+extern crate aaa;
 
 mod btree_engine;
 mod cursor;

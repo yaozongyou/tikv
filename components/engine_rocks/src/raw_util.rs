@@ -84,6 +84,7 @@ pub fn new_engine_opt(
     mut db_opt: DBOptions,
     cfs_opts: Vec<CFOptions<'_>>,
 ) -> Result<DB> {
+    aaa!("new_engine_opt: path {:?}", path);
     // Creates a new db if it doesn't exist.
     if !db_exist(path) {
         db_opt.create_if_missing(true);
@@ -109,6 +110,7 @@ pub fn new_engine_opt(
 
     // Lists all column families in current db.
     let cfs_list = DB::list_column_families(&db_opt, path)?;
+    aaa!("cfs_list: {:?}", cfs_list);
     let existed: Vec<&str> = cfs_list.iter().map(|v| v.as_str()).collect();
     let needed: Vec<&str> = cfs_opts.iter().map(|x| x.cf).collect();
 

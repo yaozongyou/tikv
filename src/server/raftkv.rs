@@ -189,6 +189,7 @@ where
 {
     /// Create a RaftKv using specified configuration.
     pub fn new(router: S, engine: E) -> RaftKv<E, S> {
+        aaa!("RaftKv::new: {:?}", aaa::Backtrace::new());
         RaftKv {
             router,
             engine,
@@ -251,6 +252,7 @@ where
         proposed_cb: Option<ExtCallback>,
         committed_cb: Option<ExtCallback>,
     ) -> Result<()> {
+        aaa!("exec_write_requests");
         #[cfg(feature = "failpoints")]
         {
             // If rid is some, only the specified region reports error.
@@ -287,6 +289,7 @@ where
             }
         }
 
+        aaa!("aaa");
         let cb = StoreCallback::write_ext(
             Box::new(move |resp| {
                 let (cb_ctx, res) = on_write_result(resp, len);
@@ -295,6 +298,7 @@ where
             proposed_cb,
             committed_cb,
         );
+        aaa!("bbb");
         let extra_opts = RaftCmdExtraOpts {
             deadline: batch.deadline,
             disk_full_opt: batch.disk_full_opt,
@@ -384,6 +388,7 @@ where
         batch: WriteData,
         write_cb: Callback<()>,
     ) -> kv::Result<()> {
+        aaa!("raftkv async_write");
         self.async_write_ext(ctx, batch, write_cb, None, None)
     }
 
@@ -395,6 +400,7 @@ where
         proposed_cb: Option<ExtCallback>,
         committed_cb: Option<ExtCallback>,
     ) -> kv::Result<()> {
+        aaa!("raftkv async_write_ext");
         fail_point!("raftkv_async_write");
         if batch.modifies.is_empty() {
             return Err(KvError::from(KvErrorInner::EmptyRequest));

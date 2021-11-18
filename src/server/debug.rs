@@ -137,6 +137,7 @@ impl<ER: RaftEngine> Debugger<ER> {
 
     /// Get all regions holding region meta data from raft CF in KV storage.
     pub fn get_all_regions_in_store(&self) -> Result<Vec<u64>> {
+        aaa!("get_all_regions_in_store");
         let db = &self.engines.kv;
         let cf = CF_RAFT;
         let start_key = keys::REGION_META_MIN_KEY;
@@ -215,16 +216,21 @@ impl<ER: RaftEngine> Debugger<ER> {
         region_id: u64,
         cfs: Vec<T>,
     ) -> Result<Vec<(T, usize)>> {
+        aaa!("region_size: region_id {}", region_id);
         let region_state_key = keys::region_state_key(region_id);
+        aaa!("region_state_key: {:?}", region_state_key);
         match self
             .engines
             .kv
             .get_msg_cf::<RegionLocalState>(CF_RAFT, &region_state_key)
         {
             Ok(Some(region_state)) => {
+                aaa!("region_state: {:?}", region_state);
                 let region = region_state.get_region();
                 let start_key = &keys::data_key(region.get_start_key());
+                aaa!("start_key: {:?}", start_key);
                 let end_key = &keys::data_end_key(region.get_end_key());
+                aaa!("end_key: {:?}", end_key);
                 let mut sizes = vec![];
                 for cf in cfs {
                     let mut size = 0;
@@ -814,6 +820,7 @@ impl<ER: RaftEngine> Debugger<ER> {
     }
 
     pub fn get_cluster_id(&self) -> Result<u64> {
+        aaa!("get_cluster_id");
         let db = &self.engines.kv;
         db.get_msg::<StoreIdent>(keys::STORE_IDENT_KEY)
             .map_err(|e| box_err!(e))

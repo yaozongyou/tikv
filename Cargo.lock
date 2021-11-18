@@ -4,6 +4,17 @@
 version = 3
 
 [[package]]
+name = "aaa"
+version = "0.1.0"
+source = "git+https://github.com/yaozongyou/aaa.git?rev=2f4818c6aad675288358a5e32f609a78bd02f960#2f4818c6aad675288358a5e32f609a78bd02f960"
+dependencies = [
+ "backtrace",
+ "chrono",
+ "gettid",
+ "thread-id 3.3.0",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -269,6 +280,7 @@ checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
 name = "batch-system"
 version = "0.1.0"
 dependencies = [
+ "aaa",
  "collections",
  "criterion",
  "crossbeam",
@@ -1103,6 +1115,7 @@ dependencies = [
 name = "engine_rocks"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "collections",
  "encryption",
  "engine_traits",
@@ -1702,6 +1715,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "gettid"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "34b20f40277dfb8a9dec7e2e945f6d8ff711e733c8f2a2c9b257562764b4c60d"
+dependencies = [
+ "libc 0.2.106",
+ "winapi 0.3.9",
 ]
 
 [[package]]
@@ -3379,7 +3402,6 @@ dependencies = [
 [[package]]
 name = "raft"
 version = "0.6.0"
-source = "git+https://github.com/tikv/raft-rs?branch=master#e6d28ef0f509c072e13288409835d5764a3b175e"
 dependencies = [
  "bytes 1.0.1",
  "fxhash",
@@ -3417,7 +3439,6 @@ dependencies = [
 [[package]]
 name = "raft-proto"
 version = "0.6.0"
-source = "git+https://github.com/tikv/raft-rs?branch=master#e6d28ef0f509c072e13288409835d5764a3b175e"
 dependencies = [
  "bytes 1.0.1",
  "protobuf",
@@ -3448,6 +3469,7 @@ dependencies = [
 name = "raftstore"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "batch-system",
  "bitflags",
  "byteorder",
@@ -3844,7 +3866,7 @@ dependencies = [
  "serde_derive",
  "slog",
  "slog-global",
- "thread-id",
+ "thread-id 4.0.0",
  "tikv_util",
 ]
 
@@ -4286,6 +4308,7 @@ dependencies = [
 name = "server"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "backup",
  "cdc",
  "chrono",
@@ -5004,6 +5027,17 @@ dependencies = [
 
 [[package]]
 name = "thread-id"
+version = "3.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7fbf4c9d56b320106cd64fd024dadfa0be7cb4706725fc44a7d7ce952d820c1"
+dependencies = [
+ "libc 0.2.106",
+ "redox_syscall 0.1.56",
+ "winapi 0.3.9",
+]
+
+[[package]]
+name = "thread-id"
 version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5fdfe0627923f7411a43ec9ec9c39c3a9b4151be313e0922042581fb6c9b717f"
@@ -5172,6 +5206,7 @@ dependencies = [
 name = "tikv"
 version = "5.3.0-alpha"
 dependencies = [
+ "aaa",
  "anyhow",
  "async-stream",
  "async-trait",
@@ -5288,6 +5323,7 @@ dependencies = [
 name = "tikv-ctl"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "backup",
  "cdc",
  "chrono",
@@ -5373,6 +5409,7 @@ dependencies = [
 name = "tikv-server"
 version = "0.0.1"
 dependencies = [
+ "aaa",
  "clap",
  "server",
  "tikv",
@@ -5400,6 +5437,7 @@ dependencies = [
 name = "tikv_kv"
 version = "0.1.0"
 dependencies = [
+ "aaa",
  "backtrace",
  "derive_more",
  "engine_panic",
@@ -5431,6 +5469,7 @@ dependencies = [
 name = "tikv_util"
 version = "0.1.0"
 dependencies = [
+ "aaa",
  "async-speed-limit",
  "backtrace",
  "byteorder",
@@ -5686,6 +5725,7 @@ checksum = "3bfd5b7557925ce778ff9b9ef90e3ade34c524b5ff10e239c69a42d546d2af56"
 name = "txn_types"
 version = "0.1.0"
 dependencies = [
+ "aaa",
  "bitflags",
  "byteorder",
  "codec",

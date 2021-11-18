@@ -17,6 +17,7 @@ where
 {
     let (tx, future) = futures_oneshot::channel::<T>();
     let callback = Box::new(move |result| {
+        aaa!("callback: result");
         let r = tx.send(result);
         if r.is_err() {
             warn!("paired_future_callback: Failed to send result to the future rx, discarded.");

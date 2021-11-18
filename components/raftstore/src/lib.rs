@@ -12,6 +12,8 @@
 extern crate test;
 #[macro_use]
 extern crate derivative;
+#[macro_use]
+extern crate aaa;
 
 pub mod coprocessor;
 pub mod errors;

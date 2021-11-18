@@ -121,6 +121,7 @@ impl<T: RaftStoreRouter<E::Local> + 'static, E: Engine, L: LockManager> Service<
         proxy: Proxy,
         reject_messages_on_memory_ratio: f64,
     ) -> Self {
+        aaa!("Service::new: bt {:?}", backtrace::Backtrace::new());
         Service {
             store_id,
             gc_worker,
@@ -1522,6 +1523,7 @@ fn future_raw_put<E: Engine, L: LockManager>(
     storage: &Storage<E, L>,
     mut req: RawPutRequest,
 ) -> impl Future<Output = ServerResult<RawPutResponse>> {
+    aaa!("future_raw_put: req {:?}", req);
     let (cb, f) = paired_future_callback();
     let for_atomic = req.get_for_cas();
     let res = if for_atomic {
@@ -1533,6 +1535,8 @@ fn future_raw_put<E: Engine, L: LockManager>(
             cb,
         )
     } else {
+        //aaa!("storage: {:?}", storage);
+        aaa!("storage: {:?}", aaa::get_type_name(storage));
         storage.raw_put(
             req.take_context(),
             req.take_cf(),

@@ -210,6 +210,7 @@ where
 
     /// Add write task to this batch
     fn add_write_task(&mut self, mut task: WriteTask<EK, ER>) {
+        aaa!("raftstore::store::async_io::WriteTaskBatch::add_write_task");
         if let Err(e) = task.valid() {
             panic!("task is not valid: {:?}", e);
         }
@@ -387,10 +388,12 @@ where
     }
 
     fn run(&mut self) {
+        aaa!("raftstore::store::async_io::write::run");
         let mut stopped = false;
         while !stopped {
             let handle_begin = match self.receiver.recv() {
                 Ok(msg) => {
+                    aaa!("receiver msg: {:?}", msg);
                     let now = Instant::now();
                     stopped |= self.handle_msg(msg);
                     now
@@ -439,6 +442,7 @@ where
 
     // Returns whether it's a shutdown msg.
     fn handle_msg(&mut self, msg: WriteMsg<EK, ER>) -> bool {
+        aaa!("handle_msg: msg {:?}", msg);
         match msg {
             WriteMsg::Shutdown => return true,
             WriteMsg::WriteTask(task) => {
@@ -452,6 +456,10 @@ where
                     "raft_wb_size" => task.raft_wb.as_ref().map_or(0, |wb| wb.persist_size()),
                     "entry_count" => task.entries.len(),
                 );
+
+                aaa!("handle write task: tag {} region_id {} peer_id {} ready_number {} kv_wb_size {} raft_wb_size {} entry_count {}", self.tag, task.region_id, task.peer_id,
+                    task.ready_number, task.kv_wb.as_ref().map_or(0, |wb| wb.data_size()), task.raft_wb.as_ref().map_or(0, |wb| wb.persist_size()), 
+                    task.entries.len());
 
                 self.metrics
                     .task_wait
@@ -642,6 +650,7 @@ where
     }
 
     pub fn senders(&self) -> &Vec<Sender<WriteMsg<EK, ER>>> {
+        aaa!("senders: {:?}", aaa::Backtrace::new());
         &self.writers
     }
 
@@ -667,6 +676,7 @@ where
                 cfg,
             );
             info!("starting store writer {}", i);
+            aaa!("starting store writer {}", i);
             let t = thread::Builder::new().name(thd_name!(tag)).spawn(move || {
                 worker.run();
             })?;

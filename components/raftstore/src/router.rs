@@ -55,6 +55,7 @@ where
         cb: Callback<EK::Snapshot>,
         extra_opts: RaftCmdExtraOpts,
     ) -> RaftStoreResult<()> {
+        aaa!("send_command");
         send_command_impl::<EK, _>(self, req, cb, extra_opts)
     }
 
@@ -107,6 +108,8 @@ where
 {
     let region_id = req.get_header().get_region_id();
     let mut cmd = RaftCommand::new(req, cb);
+    aaa!("region_id: {}", region_id);
+    aaa!("cmd: {:?}", cmd);
     cmd.extra_opts = extra_opts;
     router
         .send(cmd)
@@ -208,6 +211,7 @@ impl<EK: KvEngine, ER: RaftEngine> ProposalRouter<EK::Snapshot> for ServerRaftSt
         &self,
         cmd: RaftCommand<EK::Snapshot>,
     ) -> std::result::Result<(), TrySendError<RaftCommand<EK::Snapshot>>> {
+        aaa!("ServerRaftStoreRouter::send: cmd {:?}", cmd);
         ProposalRouter::send(&self.router, cmd)
     }
 }

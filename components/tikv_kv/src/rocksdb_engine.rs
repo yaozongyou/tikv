@@ -181,6 +181,7 @@ impl Engine for RocksEngine {
     }
 
     fn async_write(&self, ctx: &Context, batch: WriteData, cb: Callback<()>) -> Result<()> {
+        aaa!("rocksdb_engine async_write");
         self.async_write_ext(ctx, batch, cb, None, None)
     }
 

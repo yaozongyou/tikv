@@ -275,7 +275,9 @@ where
         &self,
         cmd: RaftCommand<EK::Snapshot>,
     ) -> std::result::Result<(), TrySendError<RaftCommand<EK::Snapshot>>> {
+        aaa!("RaftRouter::send_raft_command: cmd {:?}", cmd);
         let region_id = cmd.request.get_header().get_region_id();
+    
         match self.send(region_id, PeerMsg::RaftCommand(cmd)) {
             Ok(()) => Ok(()),
             Err(TrySendError::Full(PeerMsg::RaftCommand(cmd))) => Err(TrySendError::Full(cmd)),
@@ -739,6 +741,7 @@ impl<EK: KvEngine, ER: RaftEngine, T: Transport> PollHandler<PeerFsm<EK, ER>, St
     }
 
     fn handle_normal(&mut self, peer: &mut PeerFsm<EK, ER>) -> Option<usize> {
+        aaa!("RaftPoller::handle_normal");
         let mut expected_msg_count = None;
 
         fail_point!(
@@ -1292,6 +1295,7 @@ impl<EK: KvEngine, ER: RaftEngine> RaftBatchSystem<EK, ER> {
         snap_mgr: SnapManager,
         pd_client: Arc<C>,
     ) -> Result<()> {
+        aaa!("raftstore::store::fsm::store::RaftBatchSystem::start_system");
         let cfg = builder.cfg.value().clone();
         let store = builder.store.clone();
 

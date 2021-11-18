@@ -21,6 +21,7 @@ cloud-aws = [ "sst_importer/cloud-aws" ]
 cloud-gcp = [ "sst_importer/cloud-gcp" ]
 
 [dependencies]
+aaa = { git = "https://github.com/yaozongyou/aaa.git", rev = "2f4818c6aad675288358a5e32f609a78bd02f960" }
 batch-system = { path = "../batch-system", default-features = false }
 bitflags = "1.0.1"
 byteorder = "1.2"

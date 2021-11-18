@@ -246,6 +246,7 @@ impl<T: RaftStoreRouter<E::Local> + Unpin, S: StoreAddrResolver + 'static, E: En
 
         let mut grpc_server = self.builder_or_server.take().unwrap().right().unwrap();
         info!("listening on addr"; "addr" => &self.local_addr);
+        aaa!("listening on addr: {:?}", self.local_addr);
         grpc_server.start();
         self.builder_or_server = Some(Either::Right(grpc_server));
 

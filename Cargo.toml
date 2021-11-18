@@ -55,6 +55,7 @@ testing = []
 name = "tikv"
 
 [dependencies]
+aaa = { git = "https://github.com/yaozongyou/aaa.git", rev = "2f4818c6aad675288358a5e32f609a78bd02f960" }
 anyhow = "1.0"
 async-stream = "0.2"
 async-trait = "0.1"
@@ -170,8 +171,10 @@ zipf = "6.1.0"
 
 [patch.crates-io]
 # TODO: remove this when new raft-rs is published.
-raft = { git = "https://github.com/tikv/raft-rs", branch = "master" }
-raft-proto = { git = "https://github.com/tikv/raft-rs", branch = "master" }
+#raft = { git = "https://github.com/tikv/raft-rs", branch = "master" }
+raft = { path = "/home/richardyao/workspace/github/raft-rs" }
+#raft-proto = { git = "https://github.com/tikv/raft-rs", branch = "master" }
+raft-proto = { path = "/home/richardyao/workspace/github/raft-rs/proto" }
 protobuf = { git = "https://github.com/pingcap/rust-protobuf", branch = "v2.8" }
 protobuf-codegen = { git = "https://github.com/pingcap/rust-protobuf", branch = "v2.8" }
 

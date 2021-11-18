@@ -137,6 +137,7 @@ impl Peekable for RocksEngine {
     type DBVector = RocksDBVector;
 
     fn get_value_opt(&self, opts: &ReadOptions, key: &[u8]) -> Result<Option<RocksDBVector>> {
+        aaa!("get_value_opt: key {:?}", key);
         let opt: RocksReadOptions = opts.into();
         let v = self.db.get_opt(key, &opt.into_raw())?;
         Ok(v.map(RocksDBVector::from_raw))

@@ -5,6 +5,7 @@ edition = "2018"
 publish = false
 
 [dependencies]
+aaa = { git = "https://github.com/yaozongyou/aaa.git", rev = "2f4818c6aad675288358a5e32f609a78bd02f960" }
 byteorder = "1.2"
 bitflags = "1.0.1"
 farmhash = "1.1.5"

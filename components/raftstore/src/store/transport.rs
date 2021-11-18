@@ -52,6 +52,7 @@ where
 {
     #[inline]
     fn send(&self, region_id: u64, msg: CasualMessage<EK>) -> Result<()> {
+        aaa!("impl CasualRouter for RaftRouter::send: region_id {:?} msg {:?}", region_id, msg);
         match self.router.send(region_id, PeerMsg::CasualMessage(msg)) {
             Ok(()) => Ok(()),
             Err(TrySendError::Full(_)) => Err(Error::Transport(DiscardReason::Full)),
@@ -70,6 +71,7 @@ where
         &self,
         cmd: RaftCommand<EK::Snapshot>,
     ) -> std::result::Result<(), TrySendError<RaftCommand<EK::Snapshot>>> {
+        aaa!("impl ProposalRouter for RaftRouter::send: cmd {:?}", cmd);
         self.send_raft_command(cmd)
     }
 }

@@ -9,6 +9,7 @@ failpoints = ["fail/failpoints"]
 test-cgroup = []
 
 [dependencies]
+aaa = { git = "https://github.com/yaozongyou/aaa.git", rev = "2f4818c6aad675288358a5e32f609a78bd02f960" }
 nix = "0.19"
 async-speed-limit = "0.4.0"
 backtrace = "0.3.9"

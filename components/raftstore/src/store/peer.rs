@@ -1249,6 +1249,7 @@ where
         mut m: eraftpb::Message,
         peer_disk_usage: DiskUsage,
     ) -> Result<()> {
+        aaa!("peer step");
         fail_point!(
             "step_message_3_1",
             self.peer.get_store_id() == 3 && self.region_id == 1,
@@ -1299,6 +1300,7 @@ where
         let from_id = m.get_from();
         let has_snap_task = self.get_store().has_gen_snap_task();
         let pre_commit_index = self.raft_group.raft.raft_log.committed;
+        aaa!("raft_group step");
         self.raft_group.step(m)?;
         self.report_commit_log_duration(pre_commit_index, &ctx.raft_metrics);
 
@@ -2708,6 +2710,8 @@ where
         mut err_resp: RaftCmdResponse,
         disk_full_opt: DiskFullOpt,
     ) -> bool {
+        aaa!("raftstore::store::peer::Peer::propse");
+
         if self.pending_remove {
             return false;
         }

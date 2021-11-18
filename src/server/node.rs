@@ -50,6 +50,7 @@ where
     S: RaftStoreRouter<EK> + LocalReadRouter<EK> + 'static,
     EK: KvEngine,
 {
+    aaa!("create_raft_storage");
     let store = Storage::from_engine(
         engine,
         cfg,

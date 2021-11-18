@@ -15,3 +15,6 @@ pub use self::config::Config;
 pub use self::fsm::{Fsm, Priority};
 pub use self::mailbox::{BasicMailbox, Mailbox};
 pub use self::router::Router;
+
+#[macro_use]
+extern crate aaa;

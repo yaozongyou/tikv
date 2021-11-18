@@ -24,6 +24,9 @@ pub use write::{Write, WriteRef, WriteType};
 use error_code::{self, ErrorCode, ErrorCodeExt};
 use thiserror::Error;
 
+//#[macro_use]
+//extern crate aaa;
+
 #[derive(Debug, Error)]
 pub enum ErrorInner {
     #[error("{0}")]

@@ -9,3 +9,6 @@ pub mod memory;
 pub mod raft_engine_switch;
 pub mod server;
 pub mod signal_handler;
+
+#[macro_use]
+extern crate aaa;
