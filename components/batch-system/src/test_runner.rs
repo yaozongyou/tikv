@@ -91,7 +91,10 @@ impl Handler {
                         r.res %= count + 1;
                     }
                 }
-                Ok(Message::Callback(cb)) => cb(self, r),
+                Ok(Message::Callback(cb)) => {
+                    aaa!("Message::Callback");
+                    cb(self, r)
+                }
                 Err(_) => break,
             }
         }

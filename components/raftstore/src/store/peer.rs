@@ -2726,6 +2726,7 @@ where
         let is_urgent = is_request_urgent(&req);
 
         let policy = self.inspect(&req);
+        aaa!("policy: {:?}", policy);
         let res = match policy {
             Ok(RequestPolicy::ReadLocal) | Ok(RequestPolicy::StaleRead) => {
                 self.read_local(ctx, req, cb);
@@ -2737,6 +2738,7 @@ where
             }
             Ok(RequestPolicy::ProposeNormal) => {
                 // For admin cmds, only region split/merge comes here.
+                aaa!("propose normal");
                 let mut stores = Vec::new();
                 let mut opt = disk_full_opt;
                 let mut maybe_transfer_leader = false;
@@ -3445,6 +3447,7 @@ where
         poll_ctx: &mut PollContext<EK, ER, T>,
         mut req: RaftCmdRequest,
     ) -> Result<Either<u64, u64>> {
+        aaa!("propose normal");
         if self.pending_merge_state.is_some()
             && req.get_admin_request().get_cmd_type() != AdminCmdType::RollbackMerge
         {
@@ -3507,6 +3510,7 @@ where
         }
 
         let propose_index = self.next_proposal_index();
+        aaa!("data: {:?}", data);
         self.raft_group.propose(ctx.to_vec(), data)?;
         if self.next_proposal_index() == propose_index {
             // The message is dropped silently, this usually due to leader absence

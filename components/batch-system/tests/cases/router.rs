@@ -8,6 +8,8 @@ use std::sync::Arc;
 use std::time::Duration;
 use tikv_util::mpsc;
 
+use aaa::aaa;
+
 fn counter_closure(counter: &Arc<AtomicUsize>) -> Message {
     let c = counter.clone();
     Message::Callback(Box::new(move |_: &Handler, _: &mut Runner| {
@@ -21,6 +23,54 @@ fn noop() -> Message {
 
 fn unreachable() -> Message {
     Message::Callback(Box::new(|_: &Handler, _: &mut Runner| unreachable!()))
+}
+
+#[test]
+fn test_yao0() {
+    aaa!("test_yao0");
+    let (control_tx, control_fsm) = Runner::new(10);
+    let (router, mut system) =
+        batch_system::create_system(&Config::default(), control_tx, control_fsm);
+    let builder = Builder::new();
+    system.spawn("test".to_owned(), builder);
+
+    let router_ = router.clone();
+    // Control mailbox should be connected.
+    router
+        .send_control(Message::Callback(Box::new(
+            move |_: &Handler, _: &mut Runner| {
+                let (sender, runner) = Runner::new(10);
+                let mailbox = BasicMailbox::new(sender, runner, Arc::default());
+                router_.register(1, mailbox);
+            },
+        )))
+        .unwrap();
+}
+
+#[test]
+fn test_yao1() {
+    let (control_tx, mut control_fsm) = Runner::new(10);
+    let (control_drop_tx, control_drop_rx) = mpsc::unbounded();
+    control_fsm.sender = Some(control_drop_tx);
+    let (router, mut system) =
+        batch_system::create_system(&Config::default(), control_tx, control_fsm);
+    let builder = Builder::new();
+    system.spawn("test".to_owned(), builder);
+
+    let router_ = router.clone();
+    // Control mailbox should be connected.
+    router
+        .send_control(Message::Callback(Box::new(
+            move |_: &Handler, _: &mut Runner| {
+                let (sender, runner) = Runner::new(10);
+                let mailbox = BasicMailbox::new(sender, runner, Arc::default());
+                router_.register(1, mailbox);
+            },
+        )))
+        .unwrap();
+
+    router.close(1);
+    assert_eq!(control_drop_rx.try_recv(), Err(TryRecvError::Empty));
 }
 
 #[test]

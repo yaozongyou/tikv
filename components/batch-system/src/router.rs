@@ -272,6 +272,7 @@ where
     /// Force sending message to control fsm.
     #[inline]
     pub fn send_control(&self, msg: C::Message) -> Result<(), TrySendError<C::Message>> {
+        aaa!("send_control");
         match self.control_box.try_send(msg, &self.control_scheduler) {
             Ok(()) => Ok(()),
             r @ Err(TrySendError::Full(_)) => {

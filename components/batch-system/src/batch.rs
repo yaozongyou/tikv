@@ -283,7 +283,7 @@ impl<N: Fsm, C: Fsm, Handler: PollHandler<N, C>> Poller<N, C, Handler> {
 
     // Poll for readiness and forward to handler. Remove stale peer if necessary.
     fn poll(&mut self) {
-        aaa!("Poller::poll");
+        aaa!("Poller::poll: max_batch_size {:?}", self.max_batch_size);
         let mut batch = Batch::with_capacity(self.max_batch_size);
         let mut reschedule_fsms = Vec::with_capacity(self.max_batch_size);
 
@@ -292,6 +292,7 @@ impl<N: Fsm, C: Fsm, Handler: PollHandler<N, C>> Poller<N, C, Handler> {
         // calling `poll`, we do not need to configure a large value for `self.max_batch_size`.
         let mut run = true;
         while run && self.fetch_fsm(&mut batch) {
+            aaa!("batch.control.is_some(): {:?}", batch.control.is_some());
             // If there is some region wait to be deal, we must deal with it even if it has overhead
             // max size of batch. It's helpful to protect regions from becoming hungry
             // if some regions are hot points.
@@ -403,6 +404,7 @@ where
         B: HandlerBuilder<N, C>,
         B::Handler: Send + 'static,
     {
+        aaa!("start_poller");
         let handler = builder.build(priority);
         let receiver = match priority {
             Priority::Normal => self.receiver.clone(),
@@ -433,6 +435,8 @@ where
         B: HandlerBuilder<N, C>,
         B::Handler: Send + 'static,
     {
+        aaa!("pool_size: {}", self.pool_size);
+        aaa!("low_priority_pool_size: {}", self.low_priority_pool_size);
         for i in 0..self.pool_size {
             self.start_poller(
                 thd_name!(format!("{}-{}", name_prefix, i)),

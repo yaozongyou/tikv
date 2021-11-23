@@ -560,6 +560,7 @@ where
                     }
                 }
                 PeerMsg::RaftCommand(cmd) => {
+                    aaa!("raft command: cmd {:?}", cmd);
                     self.ctx
                         .raft_metrics
                         .propose
@@ -580,11 +581,13 @@ where
                             && !self.fsm.peer.disk_full_peers.majority())
                             || cmd.extra_opts.disk_full_opt == DiskFullOpt::NotAllowedOnFull)
                     {
+                        aaa!("1111");
                         self.fsm.batch_req_builder.add(cmd, req_size);
                         if self.fsm.batch_req_builder.should_finish() {
                             self.propose_batch_raft_command(true);
                         }
                     } else {
+                        aaa!("2222");
                         self.propose_batch_raft_command(true);
                         self.propose_raft_command(
                             cmd.request,
@@ -3664,6 +3667,7 @@ where
         cb: Callback<EK::Snapshot>,
         diskfullopt: DiskFullOpt,
     ) {
+        aaa!("propse raft command: msg {:?}", msg);
         if self.fsm.peer.pending_remove {
             apply::notify_req_region_removed(self.region_id(), cb);
             return;
