@@ -69,8 +69,10 @@ fn test_yao1() {
         )))
         .unwrap();
 
-    router.close(1);
+    //router.close(1);
     assert_eq!(control_drop_rx.try_recv(), Err(TryRecvError::Empty));
+    system.shutdown();
+    assert_eq!(control_drop_rx.try_recv(), Err(TryRecvError::Disconnected));
 }
 
 #[test]
